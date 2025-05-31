@@ -1,27 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Password Generator</title>
+    <meta charset="UTF-8" />
+    <title>🔐 Password Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        label { display: block; margin-top: 10px; }
-        button { margin-top: 15px; }
-        #result, #history { margin-top: 20px; white-space: pre-line; }
-        .section { margin-bottom: 30px; }
+    :root {
+        --bg-color: #ffffff;
+        --text-color: #222222;
+        --section-bg: #f9f9f9;
+        --input-bg: #ffffff;
+        --input-border: #ccc;
+        --button-bg: #007bff;
+        --button-hover: #0056b3;
+        --result-color: #28a745;
+        --history-bg: #f0f0f0;
+        --history-border: #ddd;
+        --title-color: #2c3e50;
+        --subtitle-color: #555;
+        --shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+        --radius: 10px;
+        --transition: 0.3s;
+    }
+
+    .dark-theme {
+        --bg-color: #121212;
+        --text-color: #e0e0e0;
+        --section-bg: #1f1f1f;
+        --input-bg: #2c2c2c;
+        --input-border: #444;
+        --button-bg: #1976d2;
+        --button-hover: #1565c0;
+        --result-color: #81c784;
+        --history-bg: #2c2c2c;
+        --history-border: #444;
+        --title-color: #90caf9;
+        --subtitle-color: #a0a0a0;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 25px 12px;
+        transition: background-color var(--transition), color var(--transition);
+        font-size: 14px;
+    }
+
+    h1 {
+        text-align: center;
+        color: var(--title-color);
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+    }
+
+    .section {
+        background: var(--section-bg);
+        padding: 20px;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        margin-bottom: 30px;
+        max-width: 450px;
+        margin-left: auto;
+        margin-right: auto;
+        transition: background var(--transition);
+        animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    label {
+        display: block;
+        margin-top: 10px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        cursor: pointer;
+    }
+
+    input[type="number"],
+    input[type="checkbox"] {
+        margin-top: 6px;
+        padding: 6px;
+        font-size: 0.9rem;
+        border-radius: 5px;
+        border: 1px solid var(--input-border);
+        background-color: var(--input-bg);
+        color: var(--text-color);
+        vertical-align: middle;
+        cursor: pointer;
+    }
+
+    input[type="number"] {
+        width: 80px;
+        margin-left: 8px;
+    }
+
+    button {
+        display: inline-block;
+        padding: 9px 18px;
+        margin-top: 15px;
+        font-size: 0.95rem;
+        color: #fff;
+        background: var(--button-bg);
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background var(--transition);
+        box-shadow: 0 3px 6px rgba(0, 123, 255, 0.25);
+    }
+
+    button:hover {
+        background: var(--button-hover);
+        box-shadow: 0 5px 10px rgba(0, 86, 179, 0.5);
+    }
+
+    #result {
+        margin-top: 18px;
+        font-size: 1rem;
+        color: var(--result-color);
+        word-wrap: break-word;
+        font-weight: 600;
+        user-select: all;
+    }
+
+    #history {
+        background: var(--history-bg);
+        border: 1px solid var(--history-border);
+        padding: 12px;
+        border-radius: var(--radius);
+        white-space: pre-line;
+        max-height: 160px;
+        overflow-y: auto;
+        font-size: 0.85rem;
+        line-height: 1.3;
+        color: var(--subtitle-color);
+    }
+
+    h3 {
+        margin-top: 0;
+        color: var(--subtitle-color);
+        font-size: 1rem;
+    }
+
+    #theme-switcher {
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        z-index: 1000;
+    }
+
+    #theme-switcher button {
+        background-color: var(--button-bg);
+        color: #fff;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: background var(--transition);
+        box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
+    }
+
+    #theme-switcher button:hover {
+        background-color: var(--button-hover);
+        box-shadow: 0 4px 8px rgba(0, 86, 179, 0.5);
+    }
     </style>
 </head>
 <body>
+
+    <div id="theme-switcher">
+        <button onclick="toggleTheme()" id="themeToggle">🌙 Dark Mode</button>
+    </div>
+
     <h1>Password Generator</h1>
 
     <div class="section">
-        <label>Length:
-            <input type="number" id="length" value="12" min="1" max="100">
+        <label for="length">Length:
+            <input type="number" id="length" value="12" min="1" max="100" />
         </label>
-        <label><input type="checkbox" id="digits" checked> Include digits</label>
-        <label><input type="checkbox" id="symbols" checked> Include symbols</label>
-        <label><input type="checkbox" id="uppercase" checked> Include uppercase letters</label>
-        <label><input type="checkbox" id="lowercase" checked> Include lowercase letters</label>
+        <label><input type="checkbox" id="digits" checked /> Include digits</label>
+        <label><input type="checkbox" id="symbols" checked /> Include symbols</label>
+        <label><input type="checkbox" id="uppercase" checked /> Include uppercase letters</label>
+        <label><input type="checkbox" id="lowercase" checked /> Include lowercase letters</label>
         <button onclick="generatePassword()">Generate Password</button>
 
         <div id="result"><strong>Generated Password:</strong></div>
@@ -32,6 +197,50 @@
         <div id="history">No passwords generated yet.</div>
     </div>
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+    function toggleTheme() {
+        document.body.classList.toggle('dark-theme');
+        const btn = document.getElementById('themeToggle');
+        if (document.body.classList.contains('dark-theme')) {
+            btn.textContent = '☀️ Light Mode';
+        } else {
+            btn.textContent = '🌙 Dark Mode';
+        }
+    }
+
+    function generatePassword() {
+        const length = parseInt(document.getElementById('length').value, 10);
+        const includeDigits = document.getElementById('digits').checked;
+        const includeSymbols = document.getElementById('symbols').checked;
+        const includeUppercase = document.getElementById('uppercase').checked;
+        const includeLowercase = document.getElementById('lowercase').checked;
+
+        let charset = '';
+        if (includeDigits) charset += '0123456789';
+        if (includeSymbols) charset += '!@#$%^&*()_+{}:"<>?|[];\',./`~';
+        if (includeUppercase) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        if (includeLowercase) charset += 'abcdefghijklmnopqrstuvwxyz';
+
+        if (!charset) {
+            alert('Please select at least one character type!');
+            return;
+        }
+
+        let password = '';
+        for (let i = 0; i < length; i++) {
+            password += charset.charAt(Math.floor(Math.random() * charset.length));
+        }
+
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = '<strong>Generated Password:</strong> ' + password;
+
+        const historyDiv = document.getElementById('history');
+        if (historyDiv.textContent === 'No passwords generated yet.') {
+            historyDiv.textContent = password;
+        } else {
+            historyDiv.textContent += '\n' + password;
+        }
+    }
+    </script>
 </body>
 </html>
