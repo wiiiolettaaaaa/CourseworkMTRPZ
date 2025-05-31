@@ -38,10 +38,8 @@ docker compose up --build
 
 Інтерфейс та робота програми:
 
-![](inteface.png)
+![](1.png)
 
-![](generate.png)
+![](2.png)
 
-![](history.png)
-
-![](erorrs.png)
+![](3.png)
