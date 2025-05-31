@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from generator import generate_password
 from structures.singly_circular_list import SinglyCircularList
 
@@ -11,10 +11,11 @@ def generate():
     digits = request.args.get('digits', 'true').lower() == 'true'
     symbols = request.args.get('symbols', 'true').lower() == 'true'
     uppercase = request.args.get('uppercase', 'true').lower() == 'true'
+    lowercase = request.args.get('lowercase', 'true').lower() == 'true'
 
     try:
-        password = generate_password(length, digits, symbols, uppercase)
-        password_history.append(password)  # ← записуємо в історію
+        password = generate_password(length, digits, symbols, uppercase, lowercase)
+        password_history.append(password)
         return jsonify({"password": password})
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
@@ -23,9 +24,9 @@ def generate():
 def history():
     return jsonify({"history": password_history.display()})
 
-@app.route("/")
+@app.route('/')
 def home():
-    return "<h1>Password Generator API</h1><p>Use <code>/generate</code> with parameters to generate a password.</p>"
+    return render_template('index.html')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5050)

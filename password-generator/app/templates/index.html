@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Password Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        label { display: block; margin-top: 10px; }
+        button { margin-top: 15px; }
+        #result, #history { margin-top: 20px; white-space: pre-line; }
+        .section { margin-bottom: 30px; }
+    </style>
+</head>
+<body>
+    <h1>Password Generator</h1>
+
+    <div class="section">
+        <label>Length:
+            <input type="number" id="length" value="12" min="1" max="100">
+        </label>
+        <label><input type="checkbox" id="digits" checked> Include digits</label>
+        <label><input type="checkbox" id="symbols" checked> Include symbols</label>
+        <label><input type="checkbox" id="uppercase" checked> Include uppercase letters</label>
+        <label><input type="checkbox" id="lowercase" checked> Include lowercase letters</label>
+        <button onclick="generatePassword()">Generate Password</button>
+
+        <div id="result"><strong>Generated Password:</strong></div>
+    </div>
+
+    <div class="section">
+        <h3>Password History:</h3>
+        <div id="history">No passwords generated yet.</div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
