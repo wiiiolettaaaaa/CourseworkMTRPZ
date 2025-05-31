@@ -1,18 +1,33 @@
 import random
 import string
 
-def generate_password(length=12, use_digits=True, use_symbols=True, use_uppercase=True, use_lowercase=True):
-    characters = ''
+def generate_password(length, use_digits, use_symbols, use_uppercase, use_lowercase):
+    if length < 1:
+        raise ValueError("Password length must be at least 1")
+
+    char_sets = []
+    required_chars = []
+
     if use_digits:
-        characters += string.digits
+        char_sets.append(string.digits)
+        required_chars.append(random.choice(string.digits))
     if use_symbols:
-        characters += string.punctuation
+        char_sets.append(string.punctuation)
+        required_chars.append(random.choice(string.punctuation))
     if use_uppercase:
-        characters += string.ascii_uppercase
+        char_sets.append(string.ascii_uppercase)
+        required_chars.append(random.choice(string.ascii_uppercase))
     if use_lowercase:
-        characters += string.ascii_lowercase
+        char_sets.append(string.ascii_lowercase)
+        required_chars.append(random.choice(string.ascii_lowercase))
 
-    if not characters:
-        raise ValueError("No character types selected")
+    if not char_sets:
+        raise ValueError("At least one character type must be selected")
 
-    return ''.join(random.choice(characters) for _ in range(length))
+    all_chars = ''.join(char_sets)
+    remaining_length = length - len(required_chars)
+
+    password = required_chars + random.choices(all_chars, k=remaining_length)
+    random.shuffle(password)
+
+    return ''.join(password)
