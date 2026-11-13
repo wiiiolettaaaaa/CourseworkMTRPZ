@@ -1,0 +1,6 @@
+password-generator/.venv/
+password-generator/__pycache__/
+password-generator/tests/__pycache__/
+password-generator/.pytest_cache/
+.idea/
+.DS_Store
